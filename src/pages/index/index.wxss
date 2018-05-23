@@ -1,1 +1,18 @@
 /**index.wxss**/
+
+.container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #eee;
+  display: flex;
+}
+
+.btns {
+  width: 100%;
+}
+
+.btn {
+  position: relative;
+  width: 70%;
+}
