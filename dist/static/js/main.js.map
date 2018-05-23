@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/app.js"],"names":["App","onLaunch"],"mappings":";;;;AAAA;AACAA,IAAI;AACFC,YAAU,oBAAY,CAErB;;AAHC,CAAJ,E","file":"static/js/main.js","sourcesContent":["//app.js\nApp({\n  onLaunch: function () {\n\n  },\n\n})\n\n\n// WEBPACK FOOTER //\n// ./src/app.js"],"sourceRoot":""}
