@@ -1,0 +1,4 @@
+<!--src/components/kool-canvas/kool-canvas.wxml-->
+<view class="container">
+  <canvas canvas-id="k-canvas" style="{{customStyle}}"/>
+</view>

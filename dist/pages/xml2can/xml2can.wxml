@@ -1,2 +1,4 @@
 <!--src/pages/xml2can/xml2can.wxml-->
-<text>src/pages/xml2can/xml2can.wxml</text>
+<view class="container">
+  <kool-canvas dataSource="{{skin}}" customStyle="width:700rpx;height:500rpx;border:1px #eee solid"/>
+</view>

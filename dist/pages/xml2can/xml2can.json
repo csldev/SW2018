@@ -1,1 +1,5 @@
-{}
+{
+  "usingComponents":{
+    "kool-canvas":"/components/kool-canvas/kool-canvas"
+  }
+}

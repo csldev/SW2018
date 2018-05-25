@@ -1,15 +1,15 @@
-webpackJsonp([0],{
+webpackJsonp([1],{
 
-/***/ 0:
+/***/ 138:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_router__ = __webpack_require__(52);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__core_request__ = __webpack_require__(105);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__core_event__ = __webpack_require__(119);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_settings__ = __webpack_require__(140);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_event_names__ = __webpack_require__(139);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__core_router__ = __webpack_require__(71);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__core_request__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__core_event__ = __webpack_require__(69);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_settings__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_event_names__ = __webpack_require__(72);
 // app.js
 
 
@@ -36,211 +36,14 @@ App({
 
 /***/ }),
 
-/***/ 105:
+/***/ 139:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(106);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_classCallCheck__ = __webpack_require__(61);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_classCallCheck___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_classCallCheck__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass__ = __webpack_require__(62);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__plugins_es6_promise__ = __webpack_require__(112);
-
-
-
-/**
- * 网络请求类
- */
-
-
-var Request = function () {
-  function Request() {
-    __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_classCallCheck___default()(this, Request);
-
-    this.TIMEOUT = 60000;
-  }
-  // 微信请求的默认超时时间
-
-
-  __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass___default()(Request, [{
-    key: '_fetchCookie',
-
-
-    // 取出 Cookie 中 kSeesionId 并保存
-    value: function _fetchCookie(response) {
-      var cookie = '';
-      if ('Set-Cookie' in response.header) {
-        cookie = response.header['Set-Cookie'];
-      } else if ('set-cookie' in response.header) {
-        cookie = response.header['set-cookie'];
-      }
-      return cookie;
-    }
-  }, {
-    key: '_sliceHeader',
-    value: function _sliceHeader(cookie, key) {
-      var regex = new RegExp(key + '=((\\w)+);');
-      var results = regex.exec(cookie);
-      if (results && results[1]) {
-        return results[1];
-      }
-      return null;
-    }
-
-    // 取出 Cookie 中 kSeesionId 并保存
-
-  }, {
-    key: '_saveKSessionId',
-    value: function _saveKSessionId(response) {
-      var cookie = this._fetchCookie(response);
-      var tmpKSessionId = this._sliceHeader(cookie, 'KSESSIONID');
-      if (tmpKSessionId) {
-        getApp().sessionData.minaCookie.kSessionId = tmpKSessionId;
-      }
-      var qhdi = this._sliceHeader(cookie, 'qhdi');
-      if (qhdi) {
-        getApp().sessionData.minaCookie.qhdi = qhdi;
-      }
-      var qhssokey = this._sliceHeader(cookie, 'qhssokey');
-      if (qhssokey) {
-        getApp().sessionData.minaCookie.qhssokey = qhssokey;
-      }
-      var qhssokeyid = this._sliceHeader(cookie, 'qhssokeyid');
-      if (qhssokeyid) {
-        getApp().sessionData.minaCookie.qhssokeyid = qhssokeyid;
-      }
-      var qhssokeycheck = this._sliceHeader(cookie, 'qhssokeycheck');
-      if (qhssokeycheck) {
-        getApp().sessionData.minaCookie.qhssokeycheck = qhssokeycheck;
-      }
-      wx.setStorage({
-        key: 'minaCookie',
-        data: getApp().sessionData.minaCookie
-      });
-    }
-  }, {
-    key: '_request',
-    value: function _request(method, path, data, header) {
-      var _this = this;
-
-      var server = getApp().settings.SERVER_ADDRESS;
-      var userAgent = getApp().settings.MP_USER_AGENT;
-      var minaCookieString = '';
-      if (getApp().sessionData.minaCookie) {
-        if (getApp().sessionData.minaCookie.kSessionId) {
-          minaCookieString += 'KSESSIONID=' + getApp().sessionData.minaCookie.kSessionId + ';';
-        }
-        if (getApp().sessionData.minaCookie.qhdi) {
-          minaCookieString += 'qhdi=' + getApp().sessionData.minaCookie.qhdi + ';';
-        }
-        if (getApp().sessionData.minaCookie.qhssokey) {
-          minaCookieString += 'qhssokey=' + getApp().sessionData.minaCookie.qhssokey + ';';
-        }
-        if (getApp().sessionData.minaCookie.qhssokeyid) {
-          minaCookieString += 'qhssokeyid=' + getApp().sessionData.minaCookie.qhssokeyid + ';';
-        }
-        if (getApp().sessionData.minaCookie.qhssokeycheck) {
-          minaCookieString += 'qhssokeycheck=' + getApp().sessionData.minaCookie.qhssokeycheck + ';';
-        }
-      }
-      return new __WEBPACK_IMPORTED_MODULE_3__plugins_es6_promise__["default"](function (resolve, reject) {
-        wx.request({
-          url: server + path,
-          method: method,
-          data: data,
-          header: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({
-            'content-type': 'application/json',
-            APIVERS: 'com.qunhe.instdeco.service.tob-xiaoyi',
-            Cookie: minaCookieString,
-            'MP-User-Agent': userAgent
-          }, header),
-          success: function success(response) {
-            console.log(path + ' >> ');
-            console.log(response);
-            if (response.statusCode === 200) {
-              _this._saveKSessionId(response);
-              var result = response.data;
-
-              if (result.hasOwnProperty('c')) {
-                if (result.c === '0') {
-                  if ('d' in result) {
-                    resolve(result.d);
-                  } else {
-                    resolve({});
-                  }
-                } else {
-                  reject(result.c, result.m);
-                }
-              } else {
-                resolve(result);
-              }
-            } else if (response.statusCode === 401) {
-              // 登录过期，清除本地登录信息
-              console.log('401 logout');
-              getApp().showToast('登录过期，请重新登录');
-              getApp().logout();
-              reject(response.statusCode);
-            } else {
-              reject(response.statusCode);
-            }
-          },
-          fail: function fail() {
-            reject(new Error('请求失败'));
-          }
-        });
-      });
-    }
-  }, {
-    key: 'get',
-    value: function get(path) {
-      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var header = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-      return this._request('GET', path, data, header);
-    }
-  }, {
-    key: 'post',
-    value: function post(path) {
-      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var header = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-      return this._request('POST', path, data, header);
-    }
-  }, {
-    key: 'delete',
-    value: function _delete(path) {
-      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var header = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-      return this._request('DELETE', path, data, header);
-    }
-  }, {
-    key: 'put',
-    value: function put(path) {
-      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var header = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-      return this._request('PUT', path, data, header);
-    }
-  }]);
-
-  return Request;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (Request);
-
-/***/ }),
-
-/***/ 112:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(process, global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__ = __webpack_require__(13);
+/* WEBPACK VAR INJECTION */(function(process, global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__ = __webpack_require__(8);
 
 !function (t, e) {
-  "object" == (typeof exports === "undefined" ? "undefined" : __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__["default"])(exports)) && "undefined" != typeof module ? module.exports = e() : "function" == typeof define && __webpack_require__(113) ? define(e) : t.ES6Promise = e();
+  "object" == (typeof exports === "undefined" ? "undefined" : __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__["default"])(exports)) && "undefined" != typeof module ? module.exports = e() : "function" == typeof define && __webpack_require__(140) ? define(e) : t.ES6Promise = e();
 }(this, function () {
   "use strict";
   function t(t) {
@@ -467,20 +270,20 @@ var Request = function () {
     }, t;
   }();return it.prototype.then = l, it.all = F, it.race = Y, it.resolve = h, it.reject = q, it._setScheduler = n, it._setAsap = r, it._asap = G, it.polyfill = L, it.Promise = it, it;
 });
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(110), __webpack_require__(111), __webpack_require__(2)(module)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(136), __webpack_require__(137), __webpack_require__(1)(module)))
 
 /***/ }),
 
-/***/ 119:
+/***/ 69:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_set__ = __webpack_require__(120);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_typeof__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_set__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_set___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_set__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_classCallCheck__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_classCallCheck__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_classCallCheck___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_classCallCheck__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_babel_runtime_helpers_createClass__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_babel_runtime_helpers_createClass__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_babel_runtime_helpers_createClass___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_babel_runtime_helpers_createClass__);
 
 
@@ -539,56 +342,214 @@ var Event = function () {
 
 /***/ }),
 
-/***/ 139:
+/***/ 70:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck__ = __webpack_require__(61);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__ = __webpack_require__(82);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_classCallCheck__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_classCallCheck___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_classCallCheck__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__plugins_es6_promise__ = __webpack_require__(139);
 
 
-var EventNames = function EventNames() {
-  __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck___default()(this, EventNames);
 
-  this.USER_INFO_UPDATE = 'user_info_update';
-  this.LOGOUT = 'logout';
-  this.LOGIN = 'login';
-  this.LOGIN_FAILED = 'login_failed';
-};
+/**
+ * 网络请求类
+ */
 
-/* harmony default export */ __webpack_exports__["a"] = (EventNames);
+
+var Request = function () {
+  function Request() {
+    __WEBPACK_IMPORTED_MODULE_1_babel_runtime_helpers_classCallCheck___default()(this, Request);
+
+    this.TIMEOUT = 60000;
+  }
+  // 微信请求的默认超时时间
+
+
+  __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_createClass___default()(Request, [{
+    key: '_fetchCookie',
+
+
+    // 取出 Cookie 中 kSeesionId 并保存
+    value: function _fetchCookie(response) {
+      var cookie = '';
+      if ('Set-Cookie' in response.header) {
+        cookie = response.header['Set-Cookie'];
+      } else if ('set-cookie' in response.header) {
+        cookie = response.header['set-cookie'];
+      }
+      return cookie;
+    }
+  }, {
+    key: '_sliceHeader',
+    value: function _sliceHeader(cookie, key) {
+      var regex = new RegExp(key + '=((\\w)+);');
+      var results = regex.exec(cookie);
+      if (results && results[1]) {
+        return results[1];
+      }
+      return null;
+    }
+
+    // 取出 Cookie 中 kSeesionId 并保存
+
+  }, {
+    key: '_saveKSessionId',
+    value: function _saveKSessionId(response) {
+      var cookie = this._fetchCookie(response);
+      var tmpKSessionId = this._sliceHeader(cookie, 'KSESSIONID');
+      if (tmpKSessionId) {
+        getApp().sessionData.minaCookie.kSessionId = tmpKSessionId;
+      }
+      var qhdi = this._sliceHeader(cookie, 'qhdi');
+      if (qhdi) {
+        getApp().sessionData.minaCookie.qhdi = qhdi;
+      }
+      var qhssokey = this._sliceHeader(cookie, 'qhssokey');
+      if (qhssokey) {
+        getApp().sessionData.minaCookie.qhssokey = qhssokey;
+      }
+      var qhssokeyid = this._sliceHeader(cookie, 'qhssokeyid');
+      if (qhssokeyid) {
+        getApp().sessionData.minaCookie.qhssokeyid = qhssokeyid;
+      }
+      var qhssokeycheck = this._sliceHeader(cookie, 'qhssokeycheck');
+      if (qhssokeycheck) {
+        getApp().sessionData.minaCookie.qhssokeycheck = qhssokeycheck;
+      }
+      wx.setStorage({
+        key: 'minaCookie',
+        data: getApp().sessionData.minaCookie
+      });
+    }
+  }, {
+    key: '_request',
+    value: function _request(method, path, data, header) {
+      var _this = this;
+
+      var server = getApp().settings.SERVER_ADDRESS;
+      var userAgent = getApp().settings.MP_USER_AGENT;
+      var minaCookieString = '';
+      if (getApp().sessionData.minaCookie) {
+        if (getApp().sessionData.minaCookie.kSessionId) {
+          minaCookieString += 'KSESSIONID=' + getApp().sessionData.minaCookie.kSessionId + ';';
+        }
+        if (getApp().sessionData.minaCookie.qhdi) {
+          minaCookieString += 'qhdi=' + getApp().sessionData.minaCookie.qhdi + ';';
+        }
+        if (getApp().sessionData.minaCookie.qhssokey) {
+          minaCookieString += 'qhssokey=' + getApp().sessionData.minaCookie.qhssokey + ';';
+        }
+        if (getApp().sessionData.minaCookie.qhssokeyid) {
+          minaCookieString += 'qhssokeyid=' + getApp().sessionData.minaCookie.qhssokeyid + ';';
+        }
+        if (getApp().sessionData.minaCookie.qhssokeycheck) {
+          minaCookieString += 'qhssokeycheck=' + getApp().sessionData.minaCookie.qhssokeycheck + ';';
+        }
+      }
+      return new __WEBPACK_IMPORTED_MODULE_3__plugins_es6_promise__["default"](function (resolve, reject) {
+        wx.request({
+          url: server + path,
+          method: method,
+          data: data,
+          header: __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_extends___default()({
+            'content-type': 'application/json',
+            APIVERS: 'com.qunhe.instdeco.service.tob-xiaoyi',
+            Cookie: minaCookieString,
+            'MP-User-Agent': userAgent
+          }, header),
+          success: function success(response) {
+            console.log(path + ' >> ');
+            console.log(response);
+            if (response.statusCode === 200) {
+              _this._saveKSessionId(response);
+              var result = response.data;
+
+              if (result.hasOwnProperty('c')) {
+                if (result.c === '0') {
+                  if ('d' in result) {
+                    resolve(result.d);
+                  } else {
+                    resolve({});
+                  }
+                } else {
+                  reject(result.c, result.m);
+                }
+              } else {
+                resolve(result);
+              }
+            } else if (response.statusCode === 401) {
+              // 登录过期，清除本地登录信息
+              console.log('401 logout');
+              getApp().showToast('登录过期，请重新登录');
+              getApp().logout();
+              reject(response.statusCode);
+            } else {
+              reject(response.statusCode);
+            }
+          },
+          fail: function fail() {
+            reject(new Error('请求失败'));
+          }
+        });
+      });
+    }
+  }, {
+    key: 'get',
+    value: function get(path) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var header = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      return this._request('GET', path, data, header);
+    }
+  }, {
+    key: 'post',
+    value: function post(path) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var header = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      return this._request('POST', path, data, header);
+    }
+  }, {
+    key: 'delete',
+    value: function _delete(path) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var header = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      return this._request('DELETE', path, data, header);
+    }
+  }, {
+    key: 'put',
+    value: function put(path) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      var header = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      return this._request('PUT', path, data, header);
+    }
+  }]);
+
+  return Request;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Request);
 
 /***/ }),
 
-/***/ 140:
+/***/ 71:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck__ = __webpack_require__(61);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck__);
-
-
-var Settings = function Settings() {
-  __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck___default()(this, Settings);
-
-  this.VERSION = '1.0';
-};
-
-/* harmony default export */ __webpack_exports__["a"] = (Settings);
-
-/***/ }),
-
-/***/ 52:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__ = __webpack_require__(43);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_core_js_json_stringify__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_object_keys__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_object_keys__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_object_keys___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_babel_runtime_core_js_object_keys__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_classCallCheck__ = __webpack_require__(61);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_classCallCheck__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_classCallCheck___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_babel_runtime_helpers_classCallCheck__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_babel_runtime_helpers_createClass__ = __webpack_require__(62);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_babel_runtime_helpers_createClass__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_babel_runtime_helpers_createClass___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_babel_runtime_helpers_createClass__);
 
 
@@ -670,7 +631,46 @@ var Router = function () {
 
 /* harmony default export */ __webpack_exports__["a"] = (Router);
 
+/***/ }),
+
+/***/ 72:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck__);
+
+
+var EventNames = function EventNames() {
+  __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck___default()(this, EventNames);
+
+  this.USER_INFO_UPDATE = 'user_info_update';
+  this.LOGOUT = 'logout';
+  this.LOGIN = 'login';
+  this.LOGIN_FAILED = 'login_failed';
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (EventNames);
+
+/***/ }),
+
+/***/ 73:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck__);
+
+
+var Settings = function Settings() {
+  __WEBPACK_IMPORTED_MODULE_0_babel_runtime_helpers_classCallCheck___default()(this, Settings);
+
+  this.VERSION = '1.0';
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (Settings);
+
 /***/ })
 
-},[0]);
+},[138]);
 //# sourceMappingURL=main.js.map

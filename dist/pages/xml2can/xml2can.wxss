@@ -1,1 +1,7 @@
 /* src/pages/xml2can/xml2can.wxss */
+.container{
+  position: absolute;
+  width: 100%;
+  display:flex;
+  justify-content: center;
+}

@@ -10,6 +10,12 @@ Page({
     }],
   },
 
+  onLoad() {
+    setTimeout(() => {
+      app.router.navigateTo(app.router.nativePage('xml2can'));
+    }, 500);
+  },
+
   onButtonTapped(e) {
     switch (e.currentTarget.dataset.id) {
       case 1:
