@@ -9,32 +9,33 @@ Page({
       name: 'the light of the sky',
       id: '001',
       lastModified: '20180524',
-      background: '#0a0',
-      viewContainer: [
-        {
+      background: 'http://olqa2s510.bkt.clouddn.com/set-line-height-1.jpg',
+      viewContainer: {
+        type: 'viewGroup',
+        views: [{
           type: 'viewGroup',
-          views: [
-            {
-              type: 'text',
-              text: 'sw',
-              css: {
-                position: 'relative',
-                marginLeft: '30rpx',
-                fontSize: '70rpx',
-                color: '#000',
-              },
+          views: [{
+            type: 'text',
+            text: 'sw',
+            css: {
+              position: 'relative',
+              marginLeft: '30rpx',
+              marginRight: '400rpx',
+              fontSize: '70rpx',
+              color: '#000',
             },
-            {
-              type: 'image',
-              url: '/res/s01.jpg',
-              css: {
-                position: 'relative',
-                width: '150rpx',
-                height: '150rpx',
-                marginTop: '0rpx',
-                marginLeft: '30rpx',
-              },
+          },
+          {
+            type: 'image',
+            url: '/res/s01.jpg',
+            css: {
+              position: 'relative',
+              width: '150rpx',
+              height: '150rpx',
+              marginTop: '0rpx',
+              marginLeft: '40rpx',
             },
+          },
           ],
           css: {
             position: 'relative',
@@ -47,12 +48,14 @@ Page({
           text: 'description',
           css: {
             position: 'relative',
+            marginTop: '150rpx',
             marginLeft: '30rpx',
             fontSize: '40rpx',
             color: '#000',
           },
         },
-      ],
+        ],
+      },
     },
   },
 
@@ -72,4 +75,3 @@ Page({
 
 
 });
-

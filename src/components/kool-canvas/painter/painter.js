@@ -5,6 +5,7 @@ export default class Painter {
   current = {
     x: 0,
     y: 0,
+    baseline: 0,
   }
 
   constructor(ctx, data, style) {
@@ -44,32 +45,30 @@ export default class Painter {
       width: 0,
       height: 0,
     };
-    console.log(views);
-    if (views.type === 'viewGroup') {
-      size = this._measureViews(views, parentCss);
-      console.log(size);
+    if (views.type === 'viewGroup' && parentCss) {
+      size = this._measureViews(views);
     }
-
-
-    for (const ii in views) {
-      const view = views[ii];
+    this.current.baseline = size.height + this.current.y;
+    for (const ii in views.views) {
+      const view = views.views[ii];
       const {
         type,
       } = view;
       if (type === 'viewGroup') {
-        this._handleViewGroup(view.views, view.css);
+        this._handleViewGroup(view, view.css);
       } else {
         this._handleView(view, parentCss);
       }
     }
   }
 
-  _measureViews(views, parentCss) {
+  _measureViews(viewGroup) {
     const size = {
       width: 0,
       height: 0,
     };
-    const { position, orientation } = parentCss;
+    const { views, css } = viewGroup;
+    const { orientation } = css;
     for (const ii in views) {
       const view = views[ii];
       const { type } = view;
@@ -83,7 +82,7 @@ export default class Painter {
           size.width = size.width > ms.width ? size.width : ms.width;
         }
       } else {
-        this._measureView(view);
+        const ms = this._measureView(view);
         if (orientation && orientation === 'horizontal') {
           size.width += ms.width;
           size.height = size.height > ms.height ? size.height : ms.height;
@@ -92,9 +91,11 @@ export default class Painter {
           size.width = size.width > ms.width ? size.width : ms.width;
         }
       }
+      return size;
     }
-    const marginWidth = this._getPx(view.css.marginLeft) + this._getPx(view.css.marginRight);
-    const marginHeight = this._getPx(view.css.marginTop) + this._getPx(view.css.marginBottom);
+
+    const marginWidth = this._getPx(views.css.marginLeft ? views.css.marginLeft : 0) + this._getPx(views.css.marginRight ? views.css.marginRight : 0);
+    const marginHeight = this._getPx(views.css.marginTop ? views.css.marginTop : 0) + this._getPx(views.css.marginBottom ? views.css.marginBottom : 0);
     size.width += marginWidth;
     size.height += marginHeight;
     return size;
@@ -110,8 +111,8 @@ export default class Painter {
     } else {
       // 文字类需要手动获取宽度；
       if (view.type === 'text') {
-        ctx.setFontSize(this._getPx(view.css.fontSize));
-        size.width = ctx.measureText(view.text).width;
+        this.ctx.setFontSize(this._getPx(view.css.fontSize));
+        size.width = this.ctx.measureText(view.text).width;
       }
     }
     if (view.css.height) {
@@ -122,14 +123,19 @@ export default class Painter {
         size.height = this._getPx(view.css.fontSize);
       }
     }
-    const marginWidth = this._getPx(view.css.marginLeft) + this._getPx(view.css.marginRight);
-    const marginHeight = this._getPx(view.css.marginTop) + this._getPx(view.css.marginBottom);
+    const marginWidth = this._getPx(view.css.marginLeft ? view.css.marginLeft : 0) + this._getPx(view.css.marginRight ? view.css.marginRight : 0);
+    const marginHeight = this._getPx(view.css.marginTop ? view.css.marginTop : 0) + this._getPx(view.css.marginBottom ? view.css.marginBottom : 0);
     size.width += marginWidth;
     size.height += marginHeight;
     return size;
   }
 
   _handleView(view, parentCss) {
+    if (!(parentCss && parentCss.orientation && parentCss.orientation === 'horizontal')) {
+      console.log(view);
+      this.current.x = 0;
+      this.current.y = this.current.baseline;
+    }
     let viewSize = {
       width: 0,
       height: 0,
@@ -168,7 +174,7 @@ export default class Painter {
     const marginBottom = this._getPx(text.css.marginBottom);
 
     const x = this.current.x + marginLeft;
-    const y = this.current.y + marginTop;
+    const y = this.current.y + marginTop + this.current.baseline;
 
     this.ctx.fillText(text.text, x, y);
     // this.ctx.font = `normal normal ${fontSize}px`;
@@ -193,7 +199,6 @@ export default class Painter {
       width: size.width + marginLeft + marginRight,
       height: size.height + marginTop + marginBottom,
     };
-
     return size;
   }
 
