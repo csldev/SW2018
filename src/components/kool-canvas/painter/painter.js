@@ -40,6 +40,17 @@ export default class Painter {
 
   // 参数为当前要操作的view对象（或viewgroup），以及上层viewgroup的css文件
   _handleViewGroup(views, parentCss) {
+    let size = {
+      width: 0,
+      height: 0,
+    };
+    console.log(views);
+    if (views.type === 'viewGroup') {
+      size = this._measureViews(views, parentCss);
+      console.log(size);
+    }
+
+
     for (const ii in views) {
       const view = views[ii];
       const {
@@ -51,6 +62,71 @@ export default class Painter {
         this._handleView(view, parentCss);
       }
     }
+  }
+
+  _measureViews(views, parentCss) {
+    const size = {
+      width: 0,
+      height: 0,
+    };
+    const { position, orientation } = parentCss;
+    for (const ii in views) {
+      const view = views[ii];
+      const { type } = view;
+      if (type === 'viewGroup') {
+        const ms = this._measureViews(view);
+        if (orientation && orientation === 'horizontal') {
+          size.width += ms.width;
+          size.height = size.height > ms.height ? size.height : ms.height;
+        } else {
+          size.height += ms.height;
+          size.width = size.width > ms.width ? size.width : ms.width;
+        }
+      } else {
+        this._measureView(view);
+        if (orientation && orientation === 'horizontal') {
+          size.width += ms.width;
+          size.height = size.height > ms.height ? size.height : ms.height;
+        } else {
+          size.height += ms.height;
+          size.width = size.width > ms.width ? size.width : ms.width;
+        }
+      }
+    }
+    const marginWidth = this._getPx(view.css.marginLeft) + this._getPx(view.css.marginRight);
+    const marginHeight = this._getPx(view.css.marginTop) + this._getPx(view.css.marginBottom);
+    size.width += marginWidth;
+    size.height += marginHeight;
+    return size;
+  }
+
+  _measureView(view) {
+    const size = {
+      width: 0,
+      height: 0,
+    };
+    if (view.css.width) {
+      size.width = view.css.width;
+    } else {
+      // 文字类需要手动获取宽度；
+      if (view.type === 'text') {
+        ctx.setFontSize(this._getPx(view.css.fontSize));
+        size.width = ctx.measureText(view.text).width;
+      }
+    }
+    if (view.css.height) {
+      size.height = view.css.height;
+    } else {
+      // 文字类需要手动获取高度；
+      if (view.type === 'text') {
+        size.height = this._getPx(view.css.fontSize);
+      }
+    }
+    const marginWidth = this._getPx(view.css.marginLeft) + this._getPx(view.css.marginRight);
+    const marginHeight = this._getPx(view.css.marginTop) + this._getPx(view.css.marginBottom);
+    size.width += marginWidth;
+    size.height += marginHeight;
+    return size;
   }
 
   _handleView(view, parentCss) {
@@ -92,7 +168,7 @@ export default class Painter {
     const marginBottom = this._getPx(text.css.marginBottom);
 
     const x = this.current.x + marginLeft;
-    const y = this.current.y + marginTop + fontSize;
+    const y = this.current.y + marginTop;
 
     this.ctx.fillText(text.text, x, y);
     // this.ctx.font = `normal normal ${fontSize}px`;
