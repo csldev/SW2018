@@ -45,9 +45,9 @@ export default class Painter {
       width: 0,
       height: 0,
     };
-    if (views.type === 'viewGroup' && parentCss) {
-      size = this._measureViews(views);
-    }
+    this.current.x = views.css && views.css.marginLeft ? this._getPx(views.css.marginLeft) : 0;
+    this.current.y = views.css && views.css.marginTop ? this._getPx(views.css.marginTop) + this.current.baseline : this.current.baseline;
+    size = this._measureViews(views);
     this.current.baseline = size.height + this.current.y;
     for (const ii in views.views) {
       const view = views.views[ii];
@@ -76,15 +76,21 @@ export default class Painter {
       } = view;
       let tmp = 0;
       switch (type) {
-        case 'viewGruop':
+        case 'viewGroup':
           tmp = this._measureViews(view);
           break;
         case 'image':
-          tmp = { width: this._getPx(view.css.width), height: this._getPx(view.css.height) };
+          tmp = {
+            width: this._getPx(view.css.width) + this._getPx(view.css.marginLeft) + this._getPx(view.css.marginRight),
+            height: this._getPx(view.css.height) + this._getPx(view.css.marginTop) + this._getPx(view.css.marginBottom),
+          };
           break;
         case 'text':
           this.ctx.setFontSize(this._getPx(view.css.fontSize));
-          tmp = { width: this.ctx.measureText(view.text), height: this._getPx(view.css.fontSize) };
+          tmp = {
+            width: this.ctx.measureText(view.text) + this._getPx(view.css.marginLeft) + this._getPx(view.css.marginRight),
+            height: this._getPx(view.css.fontSize) + this._getPx(view.css.marginTop) + this._getPx(view.css.marginBottom),
+          };
           break;
         default:
           break;
@@ -163,10 +169,6 @@ export default class Painter {
   // }
 
   _handleView(view, parentCss) {
-    if (!(parentCss && parentCss.orientation && parentCss.orientation === 'horizontal')) {
-      this.current.x = 0;
-      this.current.y = this.current.baseline;
-    }
     let viewSize = {
       width: 0,
       height: 0,
@@ -187,6 +189,8 @@ export default class Painter {
       } else {
         this.current.y += viewSize.height;
       }
+    } else {
+      this.current.x += viewSize.width;
     }
   }
 
