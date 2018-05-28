@@ -23,7 +23,7 @@ Page({
                 marginLeft: '30rpx',
                 fontSize: '70rpx',
                 color: '#000',
-                align: 'baseline',
+                align: 'center',
               },
             },
             {

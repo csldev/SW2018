@@ -207,6 +207,7 @@ export default class Painter {
     const x = this.current.x + marginLeft;
     let y = this.current.y + marginTop;
 
+    // 由于小程序对于获得文字高度的支持并不好，因此center和top属性都不准确，推荐使用baseline属性
     switch (text.css.align) {
       case 'baseline':
         y = this.current.baseline;
