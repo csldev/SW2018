@@ -2,20 +2,32 @@ const skin = {
   name: 'frozen-flame',
   id: '002',
   lastModified: '20180528',
-  background: '#fff',
+  background: '#aaf',
   viewContainer: {
     type: 'viewGroup',
     css: {
       padding: '20rpx',
-      marginTop: '30rpx',
+      marginTop: '50rpx',
     },
     views: [
+      {
+        type: 'image',
+        url: '/res/s01.jpg',
+        css: {
+          position: 'absolute',
+          top: '50rpx',
+          right: '50rpx',
+          width: '150rpx',
+          height: '150rpx',
+          shape: 'circle',
+        },
+      },
       {
         type: 'viewGroup',
         views: [
           {
             type: 'text',
-            text: '梁晋荣',
+            text: '梁普荣',
             css: {
               fontSize: '50rpx',
               color: '#000',
@@ -41,6 +53,7 @@ const skin = {
             type: 'text',
             text: '从业8年',
             css: {
+              marginLeft: '30rpx',
               fontSize: '30rpx',
               color: '#333',
             },

@@ -69,8 +69,12 @@ export default class Painter {
       width: 0,
       height: 0,
     };
+
     for (const ii in views.views) {
       const view = views.views[ii];
+      if (view.css && view.css.position && view.css.position === 'absolute') {
+        continue;
+      }
       const {
         type,
       } = view;
@@ -169,6 +173,11 @@ export default class Painter {
   // }
 
   _handleView(view, parentCss) {
+    if (view.css && view.css.position && view.css.position === 'absolute') {
+      // absolute只支持view而不支持viewGroup
+      this._drawAbsolute(view);
+      return;
+    }
     let viewSize = {
       width: 0,
       height: 0,
@@ -207,7 +216,6 @@ export default class Painter {
     const marginRight = this._getPx(text.css.marginRight);
     const marginTop = this._getPx(text.css.marginTop);
     const marginBottom = this._getPx(text.css.marginBottom);
-
     const x = this.current.x + marginLeft;
     let y = this.current.y + marginTop;
 
@@ -250,6 +258,43 @@ export default class Painter {
       height: size.height + marginTop + marginBottom,
     };
     return size;
+  }
+
+  _drawAbsolute(view) {
+    switch (view.type) {
+      case 'image':
+        this._drawAbsImage(view);
+        break;
+      case 'text':
+        this._fillAbsText(view);
+        break;
+      default:
+        break;
+    }
+  }
+
+  _drawAbsImage(img) {
+    this.ctx.save();
+    const width = this._getPx(img.css.width);
+    const height = this._getPx(img.css.height);
+    const x = img.css.left ? this._getPx(img.css.left) : this._getPx(this.style.width) - width - this._getPx(img.css.right);
+    const y = img.css.top ? this._getPx(img.css.top) : this._getPx(this.style.height) - height - this._getPx(img.css.bottom);
+
+    if (img.css.shape === 'circle') {
+      const r = (width > height ? height : width) / 2;
+      this.ctx.beginPath();
+      this.ctx.arc(x + r, y + r, r, 0, 2 * Math.PI);
+      this.ctx.closePath();
+      this.ctx.fill();
+      this.ctx.clip();
+    }
+
+    this.ctx.drawImage(img.url, x, y, width, height);
+    this.ctx.restore();
+  }
+
+  _fillAbsText(view) {
+
   }
 
   _getPx(str) {
