@@ -60,79 +60,110 @@ export default class Painter {
         this._handleView(view, parentCss);
       }
     }
+    this.current.y = this.current.baseline;
   }
 
-  _measureViews(viewGroup) {
+  _measureViews(views) {
+    // 暂时只支持测量横向布局的纵向宽度
     const size = {
       width: 0,
       height: 0,
     };
-    const { views, css } = viewGroup;
-    const { orientation } = css;
-    for (const ii in views) {
-      const view = views[ii];
-      const { type } = view;
-      if (type === 'viewGroup') {
-        const ms = this._measureViews(view);
-        if (orientation && orientation === 'horizontal') {
-          size.width += ms.width;
-          size.height = size.height > ms.height ? size.height : ms.height;
-        } else {
-          size.height += ms.height;
-          size.width = size.width > ms.width ? size.width : ms.width;
-        }
-      } else {
-        const ms = this._measureView(view);
-        if (orientation && orientation === 'horizontal') {
-          size.width += ms.width;
-          size.height = size.height > ms.height ? size.height : ms.height;
-        } else {
-          size.height += ms.height;
-          size.width = size.width > ms.width ? size.width : ms.width;
-        }
+    for (const ii in views.views) {
+      const view = views.views[ii];
+      const {
+        type,
+      } = view;
+      let tmp = 0;
+      switch (type) {
+        case 'viewGruop':
+          tmp = this._measureViews(view);
+          break;
+        case 'image':
+          tmp = { width: this._getPx(view.css.width), height: this._getPx(view.css.height) };
+          break;
+        case 'text':
+          this.ctx.setFontSize(this._getPx(view.css.fontSize));
+          tmp = { width: this.ctx.measureText(view.text), height: this._getPx(view.css.fontSize) };
+          break;
+        default:
+          break;
       }
-      return size;
+      size.height = tmp.height > size.height ? tmp.height : size.height;
     }
-
-    const marginWidth = this._getPx(views.css.marginLeft ? views.css.marginLeft : 0) + this._getPx(views.css.marginRight ? views.css.marginRight : 0);
-    const marginHeight = this._getPx(views.css.marginTop ? views.css.marginTop : 0) + this._getPx(views.css.marginBottom ? views.css.marginBottom : 0);
-    size.width += marginWidth;
-    size.height += marginHeight;
     return size;
   }
 
-  _measureView(view) {
-    const size = {
-      width: 0,
-      height: 0,
-    };
-    if (view.css.width) {
-      size.width = view.css.width;
-    } else {
-      // 文字类需要手动获取宽度；
-      if (view.type === 'text') {
-        this.ctx.setFontSize(this._getPx(view.css.fontSize));
-        size.width = this.ctx.measureText(view.text).width;
-      }
-    }
-    if (view.css.height) {
-      size.height = view.css.height;
-    } else {
-      // 文字类需要手动获取高度；
-      if (view.type === 'text') {
-        size.height = this._getPx(view.css.fontSize);
-      }
-    }
-    const marginWidth = this._getPx(view.css.marginLeft ? view.css.marginLeft : 0) + this._getPx(view.css.marginRight ? view.css.marginRight : 0);
-    const marginHeight = this._getPx(view.css.marginTop ? view.css.marginTop : 0) + this._getPx(view.css.marginBottom ? view.css.marginBottom : 0);
-    size.width += marginWidth;
-    size.height += marginHeight;
-    return size;
-  }
+  // _measureViews(viewGroup) {
+  //   const size = {
+  //     width: 0,
+  //     height: 0,
+  //   };
+  //   const { views, css } = viewGroup;
+  //   const { orientation } = css;
+  //   for (const ii in views) {
+  //     const view = views[ii];
+  //     const { type } = view;
+  //     if (type === 'viewGroup') {
+  //       const ms = this._measureViews(view);
+  //       if (orientation && orientation === 'horizontal') {
+  //         size.width += ms.width;
+  //         size.height = size.height > ms.height ? size.height : ms.height;
+  //       } else {
+  //         size.height += ms.height;
+  //         size.width = size.width > ms.width ? size.width : ms.width;
+  //       }
+  //     } else {
+  //       const ms = this._measureView(view);
+  //       if (orientation && orientation === 'horizontal') {
+  //         size.width += ms.width;
+  //         size.height = size.height > ms.height ? size.height : ms.height;
+  //       } else {
+  //         size.height += ms.height;
+  //         size.width = size.width > ms.width ? size.width : ms.width;
+  //       }
+  //     }
+  //     return size;
+  //   }
+
+  //   const marginWidth = this._getPx(views.css.marginLeft ? views.css.marginLeft : 0) + this._getPx(views.css.marginRight ? views.css.marginRight : 0);
+  //   const marginHeight = this._getPx(views.css.marginTop ? views.css.marginTop : 0) + this._getPx(views.css.marginBottom ? views.css.marginBottom : 0);
+  //   size.width += marginWidth;
+  //   size.height += marginHeight;
+  //   return size;
+  // }
+
+  // _measureView(view) {
+  //   const size = {
+  //     width: 0,
+  //     height: 0,
+  //   };
+  //   if (view.css.width) {
+  //     size.width = view.css.width;
+  //   } else {
+  //     // 文字类需要手动获取宽度；
+  //     if (view.type === 'text') {
+  //       this.ctx.setFontSize(this._getPx(view.css.fontSize));
+  //       size.width = this.ctx.measureText(view.text).width;
+  //     }
+  //   }
+  //   if (view.css.height) {
+  //     size.height = view.css.height;
+  //   } else {
+  //     // 文字类需要手动获取高度；
+  //     if (view.type === 'text') {
+  //       size.height = this._getPx(view.css.fontSize);
+  //     }
+  //   }
+  //   const marginWidth = this._getPx(view.css.marginLeft ? view.css.marginLeft : 0) + this._getPx(view.css.marginRight ? view.css.marginRight : 0);
+  //   const marginHeight = this._getPx(view.css.marginTop ? view.css.marginTop : 0) + this._getPx(view.css.marginBottom ? view.css.marginBottom : 0);
+  //   size.width += marginWidth;
+  //   size.height += marginHeight;
+  //   return size;
+  // }
 
   _handleView(view, parentCss) {
     if (!(parentCss && parentCss.orientation && parentCss.orientation === 'horizontal')) {
-      console.log(view);
       this.current.x = 0;
       this.current.y = this.current.baseline;
     }
@@ -174,7 +205,21 @@ export default class Painter {
     const marginBottom = this._getPx(text.css.marginBottom);
 
     const x = this.current.x + marginLeft;
-    const y = this.current.y + marginTop + this.current.baseline;
+    let y = this.current.y + marginTop;
+
+    switch (text.css.align) {
+      case 'baseline':
+        y = this.current.baseline;
+        break;
+      case 'center':
+        y += (this.current.y + this.current.baseline + fontSize) / 2;
+        break;
+      case 'top':
+        y += fontSize;
+        break;
+      default:
+        break;
+    }
 
     this.ctx.fillText(text.text, x, y);
     // this.ctx.font = `normal normal ${fontSize}px`;
